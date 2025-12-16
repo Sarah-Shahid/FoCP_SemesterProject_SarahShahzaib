@@ -72,6 +72,11 @@ struct IslamicSection {
     
 };
 
+struct Games {
+
+    string game;
+};
+
 struct IncidentLog {
 
     string date;
