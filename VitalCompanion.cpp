@@ -14,6 +14,9 @@ struct UserProfile {
     string gender;
     string bloodgroup;
     bool profileExists;
+    double weight;
+    double height;
+    long long int phone_number;
 
 };
 
@@ -21,7 +24,7 @@ struct Medicine {
 
     int medicineID;
     string name;
-    string dosage;
+    string dosage; 
     string frequency;
 
 };
@@ -44,7 +47,7 @@ struct HealthReadings {
     int diastolic;
     int heartrate;
     int sugarlevel;
-    double weight;
+
 
 };
 
@@ -69,12 +72,14 @@ struct IslamicSection {
 
     string verse;
     string dua;
+    string daily ;
     
 };
 
 struct Games {
 
     string game;
+    
 };
 
 struct IncidentLog {
