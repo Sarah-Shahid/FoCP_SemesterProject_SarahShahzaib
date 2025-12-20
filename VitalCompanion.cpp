@@ -377,6 +377,7 @@ void profileMenu() {
     //let the loop run until the user presses 0 to go to the previous page.
 }
 
+
 // ==================== MODULE 2: MEDICINE REMINDER ====================
 
 void checkMedicineReminders() {
@@ -645,6 +646,138 @@ void healthMenu() {
         }
     } while (choice != 0);
 }
+
+
+// ==================== MODULE 4: MOOD & JOURNALING ====================
+
+int analyzeSentiment(string mood, const string& note) {
+    int score = 3;
+    if (mood == "happy") score = 5;
+    else if (mood == "tired") score = 2;
+    else if (mood == "sad" || mood == "anxious") score = 1;
+
+    string negative[] = { "pain", "alone", "worried", "scared", "bad" };
+    string positive[] = { "better", "good", "family", "blessed", "happy" };
+
+    for (int i = 0; i < 5; i++) {
+        if (note.find(negative[i]) != string::npos) score--;
+        if (note.find(positive[i]) != string::npos) score++;
+    }
+
+    if (score < 1) score = 1;
+    if (score > 5) score = 5;
+    return score;
+}
+
+void addMoodEntry() {
+    clearScreen();
+    printHeader("LOG MOOD");
+
+    if (moodCount >= 30) {
+        cout << "Mood log is full.\n";
+        pauseScreen();
+        return;
+    }
+
+    moods[moodCount].date = getCurrentDate();
+
+    cout << "How are you feeling?\n";
+    cout << "1. Happy\n2. Okay\n3. Tired\n4. Sad\n5. Anxious\n";
+    cout << "Choice: ";
+
+    int c;
+    cin >> c;
+    cin.ignore();
+
+    switch (c) {
+    case 1: moods[moodCount].mood = "happy"; break;
+    case 2: moods[moodCount].mood = "okay"; break;
+    case 3: moods[moodCount].mood = "tired"; break;
+    case 4: moods[moodCount].mood = "sad"; break;
+    case 5: moods[moodCount].mood = "anxious"; break;
+    default: moods[moodCount].mood = "okay";
+    }
+
+    cout << "Note (optional): ";
+    getline(cin, moods[moodCount].note);
+
+    moods[moodCount].score =
+        analyzeSentiment(moods[moodCount].mood, moods[moodCount].note);
+
+    cout << "\nMood score: " << moods[moodCount].score << "/5\n";
+
+    moodCount++;
+    saveMoods();
+
+    pauseScreen();
+}
+
+void viewMoodTrend() {
+    clearScreen();
+    printHeader("MOOD TREND (LAST WEEK)");
+
+    if (moodCount == 0) {
+        cout << "No mood entries.\n";
+        pauseScreen();
+        return;
+    }
+
+    int happy = 0, sad = 0, anxious = 0;
+    float avg = 0.0f;
+    int count = (moodCount < 7) ? moodCount : 7;
+
+    for (int i = moodCount - 1; i >= moodCount - count; i--) {
+        if (moods[i].mood == "happy")   happy++;
+        if (moods[i].mood == "sad")     sad++;
+        if (moods[i].mood == "anxious") anxious++;
+        avg += moods[i].score;
+    }
+
+    avg /= count;
+    cout << "Happy days: " << happy << endl;
+    cout << "Sad days: " << sad << endl;
+    cout << "Anxious days: " << anxious << endl;
+    cout << "Average score: " << fixed << setprecision(1) << avg << "/5\n";
+
+    if (sad >= 4 || anxious >= 3)
+        cout << "\nWarning: Frequent low mood. Consider talking to a family member or a doctor.\n";
+
+    pauseScreen();
+}
+
+void moodMenu() {
+    int choice;
+    do {
+        clearScreen();
+        printHeader("MOOD AND JOURNAL");
+        cout << "1. Log Mood\n";
+        cout << "2. View Last 7 Entries\n";
+        cout << "3. Weekly Mood Trend\n";
+        cout << "0. Back\n";
+        cout << "\nChoice: ";
+        cin >> choice;
+
+        switch (choice) {
+        case 1: addMoodEntry(); break;
+        case 2:
+            clearScreen();
+            printHeader("MOOD HISTORY");
+            for (int i = moodCount - 1; i >= 0 && i >= moodCount - 7; i--) {
+                cout << moods[i].date << " - " << moods[i].mood
+                    << " (" << moods[i].score << "/5)\n";
+                if (!moods[i].note.empty())
+                    cout << "Note: " << moods[i].note << "\n";
+                cout << endl;
+            }
+            pauseScreen();
+            break;
+        case 3: viewMoodTrend(); break;
+        default: break;
+        }
+    } while (choice != 0);
+}
+
+// ==================== MODULE 5: ISLAMIC CONTENT ====================
 
 
 int main()
