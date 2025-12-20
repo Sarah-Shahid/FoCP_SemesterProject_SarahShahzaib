@@ -28,10 +28,26 @@ and keeping track of appointments.
 
 
 # USER MANUAL:
-add all instructions to use the application here.  
-1.  
-2.  
-3.  
+It is an applcation, that has been designed for the elderly people to help them keep track of their medical conditions. Catering to their needs, we have added the following main modules.
+- Medicine Reminders
+- Health Tracker
+- Mood and Journal
+- Islamic Content
+- Daily Routine
+- Emergency Contacts
+- Incident Log
+- Simple Games
+- Symptom Checker
+- Caregiver Mode
+  
+1. Open the application and make your profile if you are a new user.
+2. After the setup of your profile, which can be changed anytime, you are free to use the application.
+3. The 2nd option on the menu takes you to a page where you can deal woth your medicines. It will further show 5 options. To add a new medidine, go to option 1 and enter the medicine info which will then be saved.
+4. Go to option 4 from the medicine reminder page to mark any of your medicine as taken, Do it on the application as soon as u take your dosage.
+5. This menu will also gove u the options to view the list of your medicines you are currently on.
+6. Go to the last option to check your medicine report and make sure you have taken all the medicines for today.
+7. 
+
 
 
 ## Usage of AI and Reflection:
