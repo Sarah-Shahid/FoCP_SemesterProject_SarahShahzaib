@@ -379,6 +379,273 @@ void profileMenu() {
 
 // ==================== MODULE 2: MEDICINE REMINDER ====================
 
+void checkMedicineReminders() {
+    cout << "\nPending medicine reminders:\n";
+    bool found = false;
+    for (int i = 0; i < medicineCount; i++) {
+        if (!medicines[i].takenToday) {
+            cout << "- " << medicines[i].name << " (" << medicines[i].dosage
+                 << ") at " << medicines[i].time << endl;
+            found = true;
+        }
+    }
+    if (!found) cout << "All medicines taken for today.\n";
+}
+
+void addMedicine() {
+    clearScreen();
+    printHeader("ADD MEDICINE");
+
+    if (medicineCount >= 20) {
+        cout << "Medicine list is full.\n";
+        pauseScreen();
+        return;
+    }
+
+    cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+    cout << "Medicine name: ";
+    getline(cin, medicines[medicineCount].name);
+
+    cout << "Dosage (e.g., 500mg): ";
+    getline(cin, medicines[medicineCount].dosage);
+
+    cout << "Time (e.g., 08:00): ";
+    getline(cin, medicines[medicineCount].time);
+
+    medicines[medicineCount].takenToday = false;
+    medicineCount++;
+
+    saveMedicines();
+    cout << "\nMedicine added.\n";
+    pauseScreen();
+}
+
+void viewMedicines() {
+    clearScreen();
+    printHeader("ALL MEDICINES");
+
+    if (medicineCount == 0) {
+        cout << "No medicines added.\n";
+    } else {
+        for (int i = 0; i < medicineCount; i++) {
+            cout << (i + 1) << ". " << medicines[i].name << " - "
+                 << medicines[i].dosage << " at " << medicines[i].time << endl;
+        }
+    }
+    pauseScreen();
+}
+
+void markMedicineTaken() {
+    clearScreen();
+    printHeader("MARK MEDICINE AS TAKEN");
+
+    if (medicineCount == 0) {
+        cout << "No medicines added.\n";
+        pauseScreen();
+        return;
+    }
+
+    for (int i = 0; i < medicineCount; i++) {
+        cout << (i + 1) << ". " << medicines[i].name << " - "
+             << (medicines[i].takenToday ? "Taken" : "Not taken") << endl;
+    }
+
+    int choice;
+    cout << "\nEnter medicine number (0 to cancel): ";
+    cin >> choice;
+
+    if (choice > 0 && choice <= medicineCount) {
+        medicines[choice - 1].takenToday = true;
+        saveMedicines();
+        cout << "\nMarked as taken.\n";
+    }
+    pauseScreen();
+}
+
+void weeklyAdherenceReport() {
+    clearScreen();
+    printHeader("TODAY'S MEDICINE ADHERENCE");
+
+    int total = medicineCount;
+    int taken = 0;
+
+    for (int i = 0; i < medicineCount; i++) {
+        if (medicines[i].takenToday) taken++;
+    }
+
+    if (total > 0) {
+        float percentage = (float)taken / total * 100.0f;
+        cout << "Taken: " << taken << "/" << total
+             << " (" << fixed << setprecision(1) << percentage << "%)\n";
+
+        if (percentage >= 90)      cout << "Excellent adherence.\n";
+        else if (percentage >= 70) cout << "Good, try to reach 100%.\n";
+        else                       cout << "Low adherence, please be careful.\n";
+    } else {
+        cout << "No medicines defined.\n";
+    }
+    pauseScreen();
+}
+
+void medicineMenu() {
+    int choice;
+    do {
+        clearScreen();
+        printHeader("MEDICINE REMINDER");
+        cout << "1. Add Medicine\n";
+        cout << "2. View Medicines\n";
+        cout << "3. Today's Reminders\n";
+        cout << "4. Mark as Taken\n";
+        cout << "5. Today Adherence Report\n";
+        cout << "0. Back\n";
+        cout << "\nChoice: ";
+        cin >> choice;
+
+        switch (choice) {
+        case 1: addMedicine(); break;
+        case 2: viewMedicines(); break;
+        case 3:
+            clearScreen();
+            printHeader("TODAY'S REMINDERS");
+            checkMedicineReminders();
+            pauseScreen();
+            break;
+        case 4: markMedicineTaken(); break;
+        case 5: weeklyAdherenceReport(); break;
+        default: break;
+        }
+    } while (choice != 0);
+}
+
+// ==================== MODULE 3: HEALTH TRACKER ====================
+
+void analyzeHealth(HealthReading& r) {
+    cout << "\nAnalysis:\n";
+
+    if (r.systolic > 140 || r.diastolic > 90) {
+        cout << "- High blood pressure. Rest, reduce salt, consider doctor.\n";
+    } else if (r.systolic < 90 || r.diastolic < 60) {
+        cout << "- Low blood pressure. Rest and elevate legs.\n";
+    } else {
+        cout << "- Blood pressure: normal.\n";
+    }
+
+    if (r.sugar > 180) {
+        cout << "- High sugar. Avoid sweets, drink water.\n";
+    } else if (r.sugar < 70) {
+        cout << "- Low sugar. Take something sweet and inform caregiver.\n";
+    } else {
+        cout << "- Blood sugar: normal.\n";
+    }
+
+    if (r.heartRate > 100) {
+        cout << "- High heart rate. Sit and breathe slowly.\n";
+    } else if (r.heartRate < 60) {
+        cout << "- Low heart rate. Monitor closely.\n";
+    } else {
+        cout << "- Heart rate: normal.\n";
+    }
+}
+
+void addHealthReading() {
+    clearScreen();
+    printHeader("ADD HEALTH READING");
+
+    if (healthCount >= 50) {
+        cout << "Health log is full.\n";
+        pauseScreen();
+        return;
+    }
+
+    healthReadings[healthCount].date = getCurrentDate();
+
+    cout << "Systolic BP: ";
+    cin >> healthReadings[healthCount].systolic;
+
+    cout << "Diastolic BP: ";
+    cin >> healthReadings[healthCount].diastolic;
+
+    cout << "Sugar (mg/dL): ";
+    cin >> healthReadings[healthCount].sugar;
+
+    cout << "Heart rate (bpm): ";
+    cin >> healthReadings[healthCount].heartRate;
+
+    analyzeHealth(healthReadings[healthCount]);
+    healthCount++;
+    saveHealth();
+
+    cout << "\nReading saved.\n";
+    pauseScreen();
+}
+
+void viewHealthReadings() {
+    clearScreen();
+    printHeader("HEALTH HISTORY");
+
+    if (healthCount == 0) {
+        cout << "No readings yet.\n";
+    } else {
+        for (int i = healthCount - 1; i >= 0 && i >= healthCount - 10; i--) {
+            cout << "\n----------------------------------------\n";
+            cout << "Date: " << healthReadings[i].date << endl;
+            cout << "BP: " << healthReadings[i].systolic << "/"
+                 << healthReadings[i].diastolic << " mmHg\n";
+            cout << "Sugar: " << healthReadings[i].sugar << " mg/dL\n";
+            cout << "Heart rate: " << healthReadings[i].heartRate << " bpm\n";
+        }
+    }
+    pauseScreen();
+}
+
+void weeklyHealthAverage() {
+    clearScreen();
+    printHeader("LAST WEEK AVERAGE");
+
+    if (healthCount == 0) {
+        cout << "No readings available.\n";
+        pauseScreen();
+        return;
+    }
+
+    int count = (healthCount < 7) ? healthCount : 7;
+    int s = 0, d = 0, su = 0, hr = 0;
+
+    for (int i = healthCount - 1; i >= healthCount - count; i--) {
+        s   += healthReadings[i].systolic;
+        d   += healthReadings[i].diastolic;
+        su  += healthReadings[i].sugar;
+        hr  += healthReadings[i].heartRate;
+    }
+
+    cout << "Average BP: " << s / count << "/" << d / count << " mmHg\n";
+    cout << "Average sugar: " << su / count << " mg/dL\n";
+    cout << "Average heart rate: " << hr / count << " bpm\n";
+
+    pauseScreen();
+}
+
+void healthMenu() {
+    int choice;
+    do {
+        clearScreen();
+        printHeader("HEALTH TRACKER");
+        cout << "1. Add Today's Reading\n";
+        cout << "2. View Readings\n";
+        cout << "3. Weekly Average\n";
+        cout << "0. Back\n";
+        cout << "\nChoice: ";
+        cin >> choice;
+
+        switch (choice) {
+        case 1: addHealthReading(); break;
+        case 2: viewHealthReadings(); break;
+        case 3: weeklyHealthAverage(); break;
+        default: break;
+        }
+    } while (choice != 0);
+}
+
 
 int main()
 {
