@@ -779,6 +779,37 @@ void moodMenu() {
 
 // ==================== MODULE 5: ISLAMIC CONTENT ====================
 
+void islamicMenu() {
+    int choice;
+    clearScreen();
+    printHeader("ISLAMIC CONTENT");
+    cout << "1. Verse of the Day\n";
+    cout << "2. Dua of the Day\n";
+    cout << "3. Simple Prayer Reminder\n";
+    cout << "0. Back\n";
+    cout << "\nChoice: ";
+    cin >> choice;
+
+    clearScreen();
+
+    switch (choice) {
+    case 1:
+        printHeader("VERSE OF THE DAY");
+        cout << islamicVerses[rand() % 5] << endl;
+        break;
+    case 2:
+        printHeader("DUA OF THE DAY");
+        cout << duas[rand() % 5] << endl;
+        break;
+    case 3:
+        printHeader("PRAYER REMINDER");
+        cout << "Remember the five daily prayers: Fajr, Dhuhr, Asr, Maghrib, Isha.\n";
+        break;
+    default:
+        break;
+    }
+    pauseScreen();
+}
 
 int main()
 {
