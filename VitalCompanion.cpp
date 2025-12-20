@@ -811,6 +811,142 @@ void islamicMenu() {
     pauseScreen();
 }
 
+// ==================== MODULE 6: DAILY ROUTINE ====================
+
+void dailyRoutineMenu() {
+    clearScreen();
+    printHeader("DAILY ROUTINE SUGGESTIONS");
+
+    time_t now = time(0);
+    tm* ltm = localtime(&now);
+    int hour = ltm->tm_hour;
+
+    cout << "Suggestions for today:\n\n";
+
+    if (hour >= 6 && hour <= 9) {
+        cout << "- Morning: have breakfast and drink water.\n";
+    }
+    else if (hour >= 12 && hour <= 14) {
+        cout << "- Afternoon: light walk if possible and healthy lunch.\n";
+    }
+    else if (hour >= 20 && hour <= 23) {
+        cout << "- Night: prepare to sleep around " << user.sleepTime << ".\n";
+    }
+
+    if (healthCount > 0) {
+        HealthReading latest = healthReadings[healthCount - 1];
+        if (latest.systolic > 140)
+            cout << "- Your BP was high recently. Avoid stress and salt.\n";
+        if (latest.sugar > 180)
+            cout << "- Your sugar was high. Limit sweets.\n";
+    }
+
+    if (moodCount > 0 && moods[moodCount - 1].score <= 2) {
+        cout << "- Mood is low. Call family or listen to Quran.\n";
+    }
+
+    cout << "\nGeneral tips:\n";
+    cout << "- Take medicines on time.\n";
+    cout << "- Drink enough water.\n";
+    cout << "- Get some fresh air.\n";
+
+    pauseScreen();
+}
+
+// ==================== MODULE 7: EMERGENCY CONTACTS ====================
+
+void displayEmergencyContacts() {
+    clearScreen();
+    printHeader("EMERGENCY CONTACTS");
+
+    if (contactCount == 0) {
+        cout << "No contacts added.\n";
+    }
+    else {
+        for (int i = 0; i < contactCount; i++) {
+            cout << "\n----------------------------------------\n";
+            cout << (i + 1) << ". " << contacts[i].name << endl;
+            cout << "Phone: " << contacts[i].phone << endl;
+            cout << "Relation: " << contacts[i].relation << endl;
+        }
+    }
+    pauseScreen();
+}
+
+void addEmergencyContact() {
+    clearScreen();
+    printHeader("ADD EMERGENCY CONTACT");
+
+    if (contactCount >= 10) {
+        cout << "Contact list is full.\n";
+        pauseScreen();
+        return;
+    }
+
+    cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+    cout << "Name: ";
+    getline(cin, contacts[contactCount].name);
+
+    cout << "Phone number: ";
+    getline(cin, contacts[contactCount].phone);
+
+    cout << "Relation: ";
+    getline(cin, contacts[contactCount].relation);
+
+    contactCount++;
+    saveContacts();
+
+    cout << "\nContact added.\n";
+    pauseScreen();
+}
+
+void emergencyMenu() {
+    int choice;
+    do {
+        clearScreen();
+        printHeader("EMERGENCY CONTACTS");
+        cout << "1. View Contacts\n";
+        cout << "2. Add Contact\n";
+        cout << "3. Delete Contact\n";
+        cout << "0. Back\n";
+        cout << "\nChoice: ";
+        cin >> choice;
+
+        switch (choice) {
+        case 1:
+            displayEmergencyContacts();
+            break;
+        case 2:
+            addEmergencyContact();
+            break;
+        case 3:
+            if (contactCount == 0) {
+                cout << "No contacts to delete.\n";
+                pauseScreen();
+            }
+            else {
+                displayEmergencyContacts();
+                cout << "\nEnter contact number to delete (0 to cancel): ";
+                int del;
+                cin >> del;
+                if (del > 0 && del <= contactCount) {
+                    for (int i = del - 1; i < contactCount - 1; i++)
+                        contacts[i] = contacts[i + 1];
+                    contactCount--;
+                    saveContacts();
+                    cout << "\nContact deleted.\n";
+                    pauseScreen();
+                }
+            }
+            break;
+        default:
+            break;
+        }
+    } while (choice != 0);
+}
+
+
+
 int main()
 {
 
