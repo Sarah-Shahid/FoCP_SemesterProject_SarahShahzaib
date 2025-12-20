@@ -945,6 +945,88 @@ void emergencyMenu() {
     } while (choice != 0);
 }
 
+// ==================== MODULE 8: INCIDENT LOG ====================
+
+void logIncident() {
+    clearScreen();
+    printHeader("LOG INCIDENT");
+
+    if (incidentCount >= 30) {
+        cout << "Incident log is full.\n";
+        pauseScreen();
+        return;
+    }
+
+    incidents[incidentCount].date = getCurrentDate();
+
+    cout << "Incident type:\n";
+    cout << "1. Fall\n2. Pain\n3. Dizziness\n4. Confusion\n5. Panic\n";
+    cout << "Choice: ";
+
+    int type;
+    cin >> type;
+    cin.ignore();
+
+    switch (type) {
+    case 1: incidents[incidentCount].type = "Fall"; break;
+    case 2: incidents[incidentCount].type = "Pain"; break;
+    case 3: incidents[incidentCount].type = "Dizziness"; break;
+    case 4: incidents[incidentCount].type = "Confusion"; break;
+    case 5: incidents[incidentCount].type = "Panic"; break;
+    default: incidents[incidentCount].type = "Other"; break;
+    }
+
+    cout << "Brief description: ";
+    getline(cin, incidents[incidentCount].description);
+
+    cout << "Severity (1-5): ";
+    cin >> incidents[incidentCount].severity;
+
+    incidentCount++;
+    saveIncidents();
+
+    cout << "\nIncident logged.\n";
+    pauseScreen();
+}
+
+void viewIncidents() {
+    clearScreen();
+    printHeader("INCIDENT HISTORY");
+
+    if (incidentCount == 0) {
+        cout << "No incidents logged.\n";
+    } else {
+        for (int i = incidentCount - 1; i >= 0 && i >= incidentCount - 10; i--) {
+            cout << "\n----------------------------------------\n";
+            cout << "Date: " << incidents[i].date << endl;
+            cout << "Type: " << incidents[i].type << endl;
+            cout << "Description: " << incidents[i].description << endl;
+            cout << "Severity: " << incidents[i].severity << "/5\n";
+        }
+    }
+    pauseScreen();
+}
+
+void incidentMenu() {
+    int choice;
+    do {
+        clearScreen();
+        printHeader("INCIDENT LOG");
+        cout << "1. Log Incident\n";
+        cout << "2. View History\n";
+        cout << "0. Back\n";
+        cout << "\nChoice: ";
+        cin >> choice;
+
+        switch (choice) {
+        case 1: logIncident(); break;
+        case 2: viewIncidents(); break;
+        default: break;
+        }
+    } while (choice != 0);
+}
+
+
 
 
 int main()
