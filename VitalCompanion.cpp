@@ -1026,7 +1026,88 @@ void incidentMenu() {
     } while (choice != 0);
 }
 
+// ==================== MODULE 9: SIMPLE GAMES ====================
 
+void guessTheNumber() {
+    clearScreen();
+    printHeader("GUESS THE NUMBER");
+
+    int secret = rand() % 100 + 1;
+    int guess, attempts = 0;
+
+    cout << "Guess a number between 1 and 100.\n\n";
+
+    do {
+        cout << "Your guess: ";
+        cin >> guess;
+        attempts++;
+
+        if (guess < secret)      cout << "Higher.\n";
+        else if (guess > secret) cout << "Lower.\n";
+        else                     cout << "\nCorrect in " << attempts << " attempts.\n";
+    } while (guess != secret && attempts < 7);
+
+    if (guess != secret)
+        cout << "\nThe number was " << secret << ".\n";
+
+    pauseScreen();
+}
+
+void quickMath() {
+    clearScreen();
+    printHeader("QUICK MATH");
+
+    int score = 0;
+
+    for (int i = 0; i < 5; i++) {
+        int a = rand() % 20 + 1;
+        int b = rand() % 20 + 1;
+        int op = rand() % 2;
+        int answer, correct;
+
+        if (op == 0) {
+            cout << "\nQuestion " << (i + 1) << ": " << a << " + " << b << " = ";
+            correct = a + b;
+        }
+        else {
+            if (a < b) swap(a, b);
+            cout << "\nQuestion " << (i + 1) << ": " << a << " - " << b << " = ";
+            correct = a - b;
+        }
+
+        cin >> answer;
+
+        if (answer == correct) {
+            cout << "Correct.\n";
+            score++;
+        }
+        else {
+            cout << "Wrong. Answer: " << correct << endl;
+        }
+    }
+
+    cout << "\nScore: " << score << "/5\n";
+    pauseScreen();
+}
+
+void gamesMenu() {
+    int choice;
+    do {
+        clearScreen();
+        printHeader("SIMPLE GAMES");
+        cout << "1. Guess the Number\n";
+        cout << "2. Quick Math\n";
+        cout << "0. Back\n";
+        cout << "\nChoice: ";
+        cin >> choice;
+
+        switch (choice) {
+        case 1: guessTheNumber(); break;
+        case 2: quickMath(); break;
+        default: break;
+        }
+    } while (choice != 0);
+}
 
 
 int main()
