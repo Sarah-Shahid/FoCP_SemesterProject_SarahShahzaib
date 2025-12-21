@@ -1109,6 +1109,53 @@ void gamesMenu() {
     } while (choice != 0);
 }
 
+// ==================== MODULE 10: SYMPTOM CHECKER ====================
+
+void symptomChecker() {
+    clearScreen();
+    printHeader("SYMPTOM CHECKER");
+
+    bool symptoms[6] = {false};
+
+    cout << "Select symptoms:\n";
+    cout << "1. Headache\n";
+    cout << "2. Nausea\n";
+    cout << "3. Dizziness\n";
+    cout << "4. Chest pain\n";
+    cout << "5. Fatigue\n";
+    cout << "Enter numbers (0 to finish): ";
+
+    int s;
+    while (true) {
+        cin >> s;
+        if (s == 0) break;
+        if (s >= 1 && s <= 5) symptoms[s] = true;
+    }
+
+    clearScreen();
+    printHeader("SYMPTOM ANALYSIS");
+
+    if (symptoms[4] && symptoms[5]) {
+        cout << "Chest pain with fatigue. Seek immediate medical attention.\n";
+        displayEmergencyContacts();
+        pauseScreen();
+        return;
+    }
+
+    if (symptoms[1] && symptoms[3]) {
+        cout << "Headache with dizziness. Check BP and rest.\n";
+    } else if (symptoms[5] && healthCount > 0 &&
+               healthReadings[healthCount - 1].sugar > 160) {
+        cout << "Fatigue with high sugar. Monitor sugar and avoid sweets.\n";
+    } else if (symptoms[2] && symptoms[3]) {
+        cout << "Nausea with dizziness. Rest and stay hydrated.\n";
+    } else {
+        cout << "Mild symptoms. Rest, hydrate, and monitor.\n";
+    }
+
+    pauseScreen();
+}
+
 
 int main()
 {
