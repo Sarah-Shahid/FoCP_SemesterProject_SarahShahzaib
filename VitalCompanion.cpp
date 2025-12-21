@@ -1156,6 +1156,94 @@ void symptomChecker() {
     pauseScreen();
 }
 
+// ==================== MODULE 11: CAREGIVER MODE ====================
+
+void caregiverWeeklySummary() {
+    clearScreen();
+    printHeader("WEEKLY SUMMARY FOR CAREGIVER");
+
+    cout << "Patient: " << user.name << " (" << user.age << " years)\n";
+
+    cout << "\nMedicine adherence today:\n";
+    int taken = 0;
+    for (int i = 0; i < medicineCount; i++)
+        if (medicines[i].takenToday) taken++;
+    if (medicineCount > 0)
+        cout << "Taken " << taken << " of " << medicineCount << ".\n";
+    else
+        cout << "No medicines defined.\n";
+
+    cout << "\nLatest health reading:\n";
+    if (healthCount > 0) {
+        HealthReading latest = healthReadings[healthCount - 1];
+        cout << "BP: " << latest.systolic << "/" << latest.diastolic << "\n";
+        cout << "Sugar: " << latest.sugar << " mg/dL\n";
+        cout << "Heart rate: " << latest.heartRate << " bpm\n";
+    }
+    else {
+        cout << "No readings.\n";
+    }
+
+    cout << "\nMood (last week):\n";
+    if (moodCount > 0) {
+        float avg = 0.0f;
+        int count = (moodCount < 7) ? moodCount : 7;
+        for (int i = moodCount - 1; i >= moodCount - count; i--)
+            avg += moods[i].score;
+        avg /= count;
+        cout << "Average mood score: " << fixed << setprecision(1)
+            << avg << "/5\n";
+    }
+    else {
+        cout << "No mood entries.\n";
+    }
+
+    cout << "\nIncidents recorded: " << incidentCount << "\n";
+    pauseScreen();
+}
+
+void caregiverMenu() {
+    clearScreen();
+    printHeader("CAREGIVER MODE");
+
+    cout << "Enter PIN: ";
+    string pin;
+    cin >> pin;
+
+    if (pin != CAREGIVER_PIN) {
+        cout << "\nAccess denied.\n";
+        pauseScreen();
+        return;
+    }
+
+    int choice;
+    do {
+        clearScreen();
+        printHeader("CAREGIVER MENU");
+        cout << "1. Weekly Summary\n";
+        cout << "2. Medicine Adherence\n";
+        cout << "3. Mood Trend\n";
+        cout << "4. Health Average\n";
+        cout << "5. Incident History\n";
+        cout << "6. Manage Medicines\n";
+        cout << "7. Manage Emergency Contacts\n";
+        cout << "0. Exit Caregiver Mode\n";
+        cout << "\nChoice: ";
+        cin >> choice;
+
+        switch (choice) {
+        case 1: caregiverWeeklySummary(); break;
+        case 2: weeklyAdherenceReport(); break;
+        case 3: viewMoodTrend(); break;
+        case 4: weeklyHealthAverage(); break;
+        case 5: viewIncidents(); break;
+        case 6: medicineMenu(); break;
+        case 7: emergencyMenu(); break;
+        default: break;
+        }
+    } while (choice != 0);
+}
+
 
 int main()
 {
