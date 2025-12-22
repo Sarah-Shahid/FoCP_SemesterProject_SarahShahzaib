@@ -1,3 +1,4 @@
+
 #include <iostream>
 #include <fstream>
 #include <string>
@@ -53,6 +54,7 @@ struct Incident {
     string description;
     int severity;
 };
+
 
 // ==================== GLOBAL VARIABLES ====================
 
