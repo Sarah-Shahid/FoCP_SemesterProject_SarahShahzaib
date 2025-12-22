@@ -1246,9 +1246,78 @@ void caregiverMenu() {
     } while (choice != 0);
 }
 
+// ==================== MAIN MENU ====================
 
-int main()
-{
+void displayWelcome() {
+    clearScreen();
+    printHeader("ELDER CARE DIGITAL ASSISTANT");
 
+    if (!user.name.empty()) {
+        cout << "Welcome, " << user.name << ". Today is "
+             << getCurrentDate() << " " << getCurrentTime() << "\n";
+        checkMedicineReminders();
+    }
+}
+
+void mainMenu() {
+    int choice;
+    do {
+        displayWelcome();
+
+        cout << "\nMAIN MENU\n";
+        cout << "1. Profile\n";
+        cout << "2. Medicine Reminders\n";
+        cout << "3. Health Tracker\n";
+        cout << "4. Mood and Journal\n";
+        cout << "5. Islamic Content\n";
+        cout << "6. Daily Routine\n";
+        cout << "7. Emergency Contacts\n";
+        cout << "8. Incident Log\n";
+        cout << "9. Simple Games\n";
+        cout << "10. Symptom Checker\n";
+        cout << "11. Caregiver Mode\n";
+        cout << "0. Exit\n";
+        cout << "\nChoice: ";
+        cin >> choice;
+
+        switch (choice) {
+        case 1: profileMenu(); break;
+        case 2: medicineMenu(); break;
+        case 3: healthMenu(); break;
+        case 4: moodMenu(); break;
+        case 5: islamicMenu(); break;
+        case 6: dailyRoutineMenu(); break;
+        case 7: emergencyMenu(); break;
+        case 8: incidentMenu(); break;
+        case 9: gamesMenu(); break;
+        case 10: symptomChecker(); break;
+        case 11: caregiverMenu(); break;
+        case 0:
+            cout << "\nSaving data...\n";
+            saveAllData();
+            cout << "Goodbye.\n";
+            break;
+        default:
+            cout << "\nInvalid choice.\n";
+            pauseScreen();
+        }
+    } while (choice != 0);
+}
+
+// ==================== MAIN FUNCTION ====================
+
+int main() {
+    srand((unsigned)time(0));
+    loadAllData();
+
+    if (user.name.empty()) {
+        clearScreen();
+        printHeader("ELDER CARE DIGITAL ASSISTANT");
+        cout << "First time setup: please create your profile.\n";
+        pauseScreen();
+        createProfile();
+    }
+
+    mainMenu();
     return 0;
 }
